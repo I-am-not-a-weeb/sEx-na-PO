@@ -1,10 +1,9 @@
 ﻿#include <iostream>
 #include <Windows.h>
 #include <cstdio>
-#include <math.h>
+#include <math.h> /// ewentualna
 
 using namespace std;
-
 
 class Punkt
 {
@@ -58,7 +57,7 @@ class Linia
 {
     Punkt p1, p2;
 public:
-    Linia()
+    Linia()                     ///bezsens ale dziala
     {
         p1 = Punkt(); p2 = Punkt();
     }
@@ -92,15 +91,15 @@ class Trojkat
     Punkt Q;
     //Wektor wp1, wp2, wp3;
 public:
-    Trojkat()
+    Trojkat()           ///konstruktor domyslny
     {
 
     }
-    Trojkat(Punkt fp1, Punkt fp2, Punkt fp3)
+    Trojkat(Punkt fp1, Punkt fp2, Punkt fp3)            ///konstruktor tworzacy trojkat z trzech punktow, tymczasowa implementacja
     {
         lin1 = Linia(fp1, fp2); lin2 = Linia(fp2, fp3); lin3 = Linia(fp3, fp1);
         Q = Punkt((fp1.getX() + fp2.getX() + fp3.getX()) / 3, (fp1.getY() + fp2.getY() + fp3.getY()) / 3);
-  /*      wp1 = Wektor(Q, fp1);
+  /*    wp1 = Wektor(Q, fp1);
         wp2 = Wektor(Q, fp2);
         wp3 = Wektor(Q, fp3);*/
     }
@@ -119,7 +118,7 @@ public:
     {
         return Q.getY();
     }
-    int wypiszlinp1x(Linia lin)
+    int wypiszlinp1x(Linia lin)                     /// tymczasowe / test.pocz
     {
         return lin.getP1().getX();
     }
@@ -134,7 +133,7 @@ public:
     int wypiszlinp2y(Linia lin)
     {
         return lin.getP2().getY();
-    }
+    }                                               /// tymczasowe / test.kon
 };
 
 int main()
