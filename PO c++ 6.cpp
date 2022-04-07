@@ -6,7 +6,8 @@
 #include <sstream>
 
 using namespace std;
-
+                            /// wersja NOT FOOL PROOF, trzeba wpisywać dobre wartosci, 
+                            ///tak samo jak przy instalacji programow, nie chcemy zainstalowac niechcianych dodatkow ;)
 class Punkt
 {
     int x, y;
@@ -102,10 +103,10 @@ public:
 class Trojkat
 {
     Linia lin1, lin2, lin3;
-    Punkt Q;            /// srodek ciezkosci  trojkata, implementacja nie jest oparta na jego zmianie (jeszcze)
+    Punkt Q;                            /// srodek ciezkosci  trojkata, implementacja nie jest oparta na jego zmianie (jeszcze)
     //Wektor wp1, wp2, wp3;
 public:
-    Trojkat()           /// konstruktor domyslny
+    Trojkat()                           /// konstruktor domyslny
     {
 
     }
@@ -179,19 +180,25 @@ public:
         lin4 = Linia(fp4, fp1);
         Q = Punkt((fp1.getX() + fp2.getX() + fp3.getX() + fp4.getX()) / 4, (fp1.getY() + fp2.getY() + fp3.getY() + fp4.getY()) / 3);
     }
-    Czworokat(const Czworokat &old_czwo)
+    Czworokat(const Czworokat& old_czwo)
     {
-
+        lin1 = old_czwo.lin1;
+        lin2 = old_czwo.lin2;
+        lin3 = old_czwo.lin3;
+        lin4 = old_czwo.lin4;
     }
     void przesun(int dx,int dy)
     {
         lin1.Move(dx, dy);
         lin2.Move(dx, dy);
         lin3.Move(dx, dy);
+        lin4.Move(dx, dy);
     }
     string toString()
     {
-
+        ostringstream out;
+        out << lin1.toString() << lin2.toString() << lin3.toString() << lin4.toString();
+        return out.str();
     }
 };
 class Obraz
@@ -207,8 +214,7 @@ public:
     }
     void dodajTrojkat(Trojkat ftroj)
     {
-        /*if (t != 0) 
-        {
+        t++;
             ttrojkaty = new Trojkat[t];
             for (int i = 0; i < t; i++)
             {
@@ -220,53 +226,76 @@ public:
             {
                 trojkaty[i] = ttrojkaty[i];
             }
-        }
         trojkaty[t-1] = ftroj;
-        delete[] ttrojkaty;*/
+        delete[] ttrojkaty;
+        cout << endl << "Dodano trojkat nr " << t-1 << endl;
     }
     void dodajCzworokat(Czworokat fczwor)
     {
+        c++;
         tczworokaty = new Czworokat[c];
-        tczworokaty = czworokaty;
+        for (int i = 0; i < c; i++)
+        {
+            tczworokaty[i] = czworokaty[i];
+        }
+        ///tczworokaty = czworokaty;
         delete[] czworokaty;
-        czworokaty = new Czworokat[++c];
-        czworokaty = tczworokaty;
-        czworokaty[c] = fczwor;
+        czworokaty = new Czworokat[c];
+        for (int i = 0; i < c; i++)
+        {
+            czworokaty[i] = tczworokaty[i];
+        }
+        ///czworokaty = tczworokaty;
+        czworokaty[c-1] = fczwor;
         delete[] tczworokaty;
+        cout << endl << "Dodano czworokat nr " << c-1 << endl;
     }
     void przesunTrojkat(int dx, int dy, int nr)
     {
         trojkaty[nr].przesun(dx, dy);
+        cout << endl << "Przesunieto trojkat nr " << nr << " o dx = " << dx << " i dy = " << dy << endl;
     }
     void przesunCzworokat(int dx, int dy,int nr)
     {
         czworokaty[nr].przesun(dx, dy);
-    }
-    void listTrojkaty()
-    {
-    
-        for (int i = 0; i < t; i++)
-        {
-            cout << "Trojkat nr " << i << ":" << endl << "P1" << trojkaty[i].toString();
-        }
+        cout << endl << "Przesunieto czworokat nr " << nr << " o dx = " << dx << " i dy = " << dy << endl;
     }
     string sListTrojkaty()
     {
         ostringstream out;
         for (int i = 0; i < t; i++)
         {
-            out << trojkaty[i].toString() << endl;
+            out << "Trojkat nr "<< i << ": " << trojkaty[i].toString() << endl;
+        }
+        return out.str();
+    }
+    string sListCzworokaty()
+    {
+        ostringstream out;
+        for (int i = 0; i < c; i++)
+        {
+            out << "Czworokat nr " << i << ": " << czworokaty[i].toString() << endl;
         }
         return out.str();
     }
     string toString()
     {
         ostringstream out;
-        out << sListTrojkaty();
-        ///listCzworokaty();
+        out << sListTrojkaty() << sListCzworokaty();
         return out.str();
     }
-
+    void Move(int dx, int dy)
+    {
+        for (int i = 0; i < t; i++)
+        {
+            trojkaty[i].przesun(dx, dy);
+        }
+        for (int i = 0; i < c; i++)
+        {
+            czworokaty[i].przesun(dx, dy);
+        }
+        cout << endl << "Przesunieto obraz"<< " o dx = " << dx << " i dy = " << dy << endl;
+    }
 };
 int main()
 {   
@@ -276,7 +305,7 @@ int main()
     while (true)
     {
         cout << "1. Wypisac figury" << endl << "2. Dodac trojkat" << endl << "3. Przesunac trojkat"; 
-        cout << endl << "4. Dodac czworokat" << endl << "5. Przesunac czworokat" << endl;
+        cout << endl << "4. Dodac czworokat" << endl << "5. Przesunac czworokat" << endl << "6. Przesunac obraz" << endl;
         ch = _getch();
         switch(ch)
         {
@@ -284,12 +313,11 @@ int main()
         case '1':
         {
             cout << image.toString();
-            _getch();
             break;
         }
         case '2':
         {
-           cout << "Punkt P1 x=";
+            cout << "Punkt P1 x=";
             cin >> tx1;
             cout << "Punkt P1 y=";
             cin >> ty1;
@@ -305,12 +333,11 @@ int main()
             cin >> ty3;
             cout << endl;
             image.dodajTrojkat(Trojkat(Punkt(tx1,ty1),Punkt(tx2,ty2),Punkt(tx3,ty3)));
-            _getch();
             break;
         }
         case '3':
         {
-            image.listTrojkaty();
+            cout << image.sListTrojkaty() << endl;
             cout << endl << "Wpisz nr trojkata do przesuniecia: ";
             cin >> nr;
             cout << endl << "dx = ";
@@ -318,19 +345,63 @@ int main()
             cout << endl << "dy = ";
             cin >> ty1;
             image.przesunTrojkat(tx1, ty1, nr);
-            _getch();
             break;
         }
         case '4':
         {
-            _getch();
+            cout << "Punkt P1 x=";
+            cin >> tx1;
+            cout << "Punkt P1 y=";
+            cin >> ty1;
+            cout << endl;
+            cout << "Punkt P2 x=";
+            cin >> tx2;
+            cout << "Punkt P2 y=";
+            cin >> ty2;
+            cout << endl;
+            cout << "Punkt P3 x=";
+            cin >> tx3;
+            cout << "Punkt P3 y=";
+            cin >> ty3;
+            cout << endl;
+            cout << "Punkt P4 x=";
+            cin >> tx4;
+            cout << "Punkt P4 y=";
+            cin >> ty4;
+            cout << endl;
+            image.dodajCzworokat(Czworokat(Punkt(tx1, ty1), Punkt(tx2, ty2), Punkt(tx3, ty3), Punkt(tx4, ty4)));
+            break;
+        }
+        case '5':
+        {
+            cout << image.sListCzworokaty() << endl;
+            cout << endl << "Wpisz nr czworokata do przesuniecia: ";
+            cin >> nr;
+            cout << endl << "dx = ";
+            cin >> tx1;
+            cout << endl << "dy = ";
+            cin >> ty1;
+            image.przesunCzworokat(tx1, ty1, nr);
+            break;
+        }
+        case '6':
+        {            
+            cout << endl << "dx = ";
+            cin >> tx1;
+            cout << endl << "dy = ";
+            cin >> ty1;
+            image.Move(tx1, ty1);
             break;
         }
         default:
-        {
-            _getch();
+        {   
+            cout << endl << "Cos poszlo nie tak :(" << endl << "(Prawdopodobnie zly wybor)";
+            break;
         }
         }
+        cout << endl << "Nacisnij dowolny przycisk by kontynuowac." << endl;
+        _getch();
+        system("cls");
     }
 }
 
