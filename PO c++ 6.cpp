@@ -7,7 +7,6 @@
 
 using namespace std;
                             /// wersja NOT FOOL PROOF, trzeba wpisywać dobre wartosci, 
-                            ///tak samo jak przy instalacji programow, nie chcemy zainstalowac niechcianych dodatkow ;)
 class Punkt
 {
     int x, y;
