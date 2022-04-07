@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <cstdio>
 #include <math.h> /// ewentualna
+#include <conio.h>
+#include <sstream>
 
 using namespace std;
 
@@ -35,7 +37,9 @@ public:
     }
     string toString()
     {
-
+        ostringstream out;
+        out << "(" << x << "," << y << ") ";
+            return out.str();
     }
 };
 /*class Wektor
@@ -90,7 +94,9 @@ public:
     }
     string toString()
     {
-
+        ostringstream out;
+        out << p1.toString();
+        return out.str();
     }
 };
 class Trojkat
@@ -121,13 +127,15 @@ public:
     void przesun(int dx, int dy)
     {
         Q = Punkt(Q.getX() + dx, Q.getY() + dy);
-        lin1 = Linia(Punkt(lin1.getP1().getX() + dx,lin1.getP1().getY() + dy), Punkt(lin1.getP2().getX() + dx,lin1.getP2().getY()+dy));
-        lin2 = Linia(Punkt(lin2.getP1().getX() + dx, lin2.getP1().getY() + dy), Punkt(lin2.getP2().getX() + dx, lin2.getP2().getY() + dy));
-        lin3 = Linia(Punkt(lin3.getP1().getX() + dx, lin3.getP1().getY() + dy), Punkt(lin3.getP2().getX() + dx, lin3.getP2().getY() + dy));
+        lin1.Move(dx, dy);
+        lin2.Move(dx, dy);
+        lin3.Move(dx, dy);
     }
     string toString()
     {
-
+        ostringstream out;
+        out << lin1.toString() << lin2.toString() << lin3.toString();
+        return out.str();
     }
     int wypiszQx()
     {
@@ -177,10 +185,9 @@ public:
     }
     void przesun(int dx,int dy)
     {
-        lin1 = Linia(Punkt(lin1.getP1().getX() + dx, lin1.getP1().getY() + dy), Punkt(lin1.getP2().getX() + dx, lin1.getP2().getY() + dy));
-        lin2 = Linia(Punkt(lin2.getP1().getX() + dx, lin2.getP1().getY() + dy), Punkt(lin2.getP2().getX() + dx, lin2.getP2().getY() + dy));
-        lin3 = Linia(Punkt(lin3.getP1().getX() + dx, lin3.getP1().getY() + dy), Punkt(lin3.getP2().getX() + dx, lin3.getP2().getY() + dy));
-        lin4 = Linia(Punkt(lin4.getP1().getX() + dx, lin4.getP1().getY() + dy), Punkt(lin4.getP2().getX() + dx, lin4.getP2().getY() + dy));
+        lin1.Move(dx, dy);
+        lin2.Move(dx, dy);
+        lin3.Move(dx, dy);
     }
     string toString()
     {
@@ -189,23 +196,141 @@ public:
 };
 class Obraz
 {
-    Trojkat trojkaty;
-    Czworokat czworokaty;
+    int t = 0; int c = 0;
+    Trojkat* trojkaty,* ttrojkaty;
+    Czworokat* czworokaty,* tczworokaty;
 public:
     Obraz()
     {
-
+        trojkaty = new Trojkat[t];
+        czworokaty = new Czworokat[c];
+    }
+    void dodajTrojkat(Trojkat ftroj)
+    {
+        /*if (t != 0) 
+        {
+            ttrojkaty = new Trojkat[t];
+            for (int i = 0; i < t; i++)
+            {
+                ttrojkaty[i] = trojkaty[i];
+            }
+            delete[] trojkaty;
+            trojkaty = new Trojkat[t];                                                          ///wypierdala wyjatki ze o ja pierdole
+            for (int i = 0; i < t; i++)
+            {
+                trojkaty[i] = ttrojkaty[i];
+            }
+        }
+        trojkaty[t-1] = ftroj;
+        delete[] ttrojkaty;*/
+    }
+    void dodajCzworokat(Czworokat fczwor)
+    {
+        tczworokaty = new Czworokat[c];
+        tczworokaty = czworokaty;
+        delete[] czworokaty;
+        czworokaty = new Czworokat[++c];
+        czworokaty = tczworokaty;
+        czworokaty[c] = fczwor;
+        delete[] tczworokaty;
+    }
+    void przesunTrojkat(int dx, int dy, int nr)
+    {
+        trojkaty[nr].przesun(dx, dy);
+    }
+    void przesunCzworokat(int dx, int dy,int nr)
+    {
+        czworokaty[nr].przesun(dx, dy);
+    }
+    void listTrojkaty()
+    {
+    
+        for (int i = 0; i < t; i++)
+        {
+            cout << "Trojkat nr " << i << ":" << endl << "P1" << trojkaty[i].toString();
+        }
+    }
+    string sListTrojkaty()
+    {
+        ostringstream out;
+        for (int i = 0; i < t; i++)
+        {
+            out << trojkaty[i].toString() << endl;
+        }
+        return out.str();
+    }
+    string toString()
+    {
+        ostringstream out;
+        out << sListTrojkaty();
+        ///listCzworokaty();
+        return out.str();
     }
 
 };
 int main()
-{
-    Punkt a(-3, 2);
-    Punkt b(-8, 5);
-    Punkt c(-1, 5);
-    Trojkat abc(a, b, c);
-    cout << "Q abc = " << abc.wypiszQx() << " , " << abc.wypiszQy() << endl;
-    abc.przesun(1, 1);
-    cout << "Q efg = " << abc.wypiszQx() << " , " << abc.wypiszQy() << endl;
+{   
+    Obraz image;
+    int tx1, ty1, tx2, ty2, tx3, ty3, tx4, ty4, nr;
+    char ch;
+    while (true)
+    {
+        cout << "1. Wypisac figury" << endl << "2. Dodac trojkat" << endl << "3. Przesunac trojkat"; 
+        cout << endl << "4. Dodac czworokat" << endl << "5. Przesunac czworokat" << endl;
+        ch = _getch();
+        switch(ch)
+        {
+            system("cls");
+        case '1':
+        {
+            cout << image.toString();
+            _getch();
+            break;
+        }
+        case '2':
+        {
+           cout << "Punkt P1 x=";
+            cin >> tx1;
+            cout << "Punkt P1 y=";
+            cin >> ty1;
+            cout << endl;
+            cout << "Punkt P2 x=";
+            cin >> tx2;
+            cout << "Punkt P2 y=";
+            cin >> ty2;
+            cout << endl;
+            cout << "Punkt P3 x=";
+            cin >> tx3;
+            cout << "Punkt P3 y=";
+            cin >> ty3;
+            cout << endl;
+            image.dodajTrojkat(Trojkat(Punkt(tx1,ty1),Punkt(tx2,ty2),Punkt(tx3,ty3)));
+            _getch();
+            break;
+        }
+        case '3':
+        {
+            image.listTrojkaty();
+            cout << endl << "Wpisz nr trojkata do przesuniecia: ";
+            cin >> nr;
+            cout << endl << "dx = ";
+            cin >> tx1;
+            cout << endl << "dy = ";
+            cin >> ty1;
+            image.przesunTrojkat(tx1, ty1, nr);
+            _getch();
+            break;
+        }
+        case '4':
+        {
+            _getch();
+            break;
+        }
+        default:
+        {
+            _getch();
+        }
+        }
+    }
 }
 
